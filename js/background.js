@@ -157,7 +157,8 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
     // 简单的音视频检测
     // 大部分网站视频的type并不是media，且视频做了防下载处理，所以这里仅仅是为了演示效果，无实际意义
 
-    if (/^http:\/\/mov.bn.netease.com\/open-movie\/nos\/flv\S*.flv$/.test(details.url)) {
+    console.log(details.url)
+    if (/^http[s]?:\/\/mov.bn.netease.com\/open-movie\/nos\/flv\S*.flv$/.test(details.url)) {
         movies.push(details.url)
             // todo
         chrome.contextMenus.create({
@@ -165,7 +166,15 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
             contexts: ['all'],
             onclick: function(params) {
                 // 注意不能使用location.href，因为location是属于background的window对象
-                chrome.tabs.update({ url: movies[0] });
+                chrome.tabs.update({ url: details.url });
+            }
+        });
+        chrome.contextMenus.create({
+            title: '显示当前页面视频URL',
+            contexts: ['all'],
+            onclick: function(params) {
+                // 注意不能使用location.href，因为location是属于background的window对象
+                alert(details.url);
             }
         });
     }
