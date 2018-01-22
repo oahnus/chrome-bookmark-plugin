@@ -1,0 +1,37 @@
+.bookmark-input {
+    height: 30px;
+    font-size: 20px;
+    line-height: 30px;
+    border: 2px solid #ddd;
+    width: 75%;
+    margin-top: 5%;
+}
+
+.bookmark-search-btn {
+    height: 30px;
+    border-radius: 3px;
+    background: #0077db;
+    color: #fff;
+    margin-left: 4px;
+    border: 0;
+    width: 50px;
+}
+
+#bookmark-list {
+    padding-left: 20px;
+}
+
+#bookmark-list li {
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+#bookmark-container {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+}
+
+#warning-msg {
+    display: none;
+}

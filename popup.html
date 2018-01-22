@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>popup页</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="css/main.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Microsoft Yahei';
+            width: 400px;
+            min-height: 100px;
+        }
+        
+        a {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bookmark-container">
+        <div id="title">Bookmark Manager</div>
+
+        <div>
+            <input class="bookmark-input" type="text" id="input" value="" />
+            <button type="button" class="bookmark-search-btn" id="btn">搜索</button>
+        </div>
+        <div id="warning-msg">未找到相关书签</div>
+        <ul id="bookmark-list"></ul>
+
+    </div>
+
+    <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="js/popup.js"></script>
+    <script type="text/javascript" src="js/bookmark.js"></script>
+</body>
+
+</html>
