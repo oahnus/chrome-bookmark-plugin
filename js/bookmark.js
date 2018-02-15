@@ -1,23 +1,27 @@
-$('#input').bind('keypress', function(event) {
+$('#keyword').bind('keypress', function(event) {
     if (event.keyCode == "13") $('#btn').click();
 });
 
-// 输入框内容修改时，获取书签
-
-// $('#input').on('input propertychange', () => {
-//     $('#btn').click();
-// });
+function hightlightKeyword(str, keyword) {
+    let reg = new RegExp(`${keyword}`, 'gi')
+    return str.replace(reg, `<span style="color: orange">${keyword}</span>`)
+}
 
 $('#btn').click(e => {
-    let input = $("#input").val()
-    chrome.bookmarks.search(input, function(res) {
+    let keyword = $("#keyword").val()
+    let reg = new RegExp(`${keyword}`, 'gi')
+    chrome.bookmarks.search(keyword, function(res) {
         let len = res.length
         if (len === 0) {
             $('#warning-msg').show()
             $("#bookmark-list").html('')
         } else {
             $('#warning-msg').hide()
-            let names = res.reduce((str, node) => { return str + `<li><a href="${node.url}" target="_blank">${node.title}</a></li>` }, '')
+
+            let names = res.reduce((str, node) => {
+                let name = hightlightKeyword(node.title, keyword)
+                return str + `<li><a href="${node.url}" target="_blank">${name}</a></li>`
+            }, '')
             $("#bookmark-list").html(names)
         }
     })

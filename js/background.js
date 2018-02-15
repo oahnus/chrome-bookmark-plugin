@@ -99,26 +99,6 @@ chrome.omnibox.onInputChanged.addListener((text, suggest) => {
             let href = 'https://www.bing.com/search?q=' + searchContent
             openUrlCurrentTab(href)
     }
-
-    // if (text == '美女') {
-    //     suggest([
-    //         { content: '中国' + text, description: '你要找“中国美女”吗？' },
-    //         { content: '日本' + text, description: '你要找“日本美女”吗？' },
-    //         { content: '泰国' + text, description: '你要找“泰国美女或人妖”吗？' },
-    //         { content: '韩国' + text, description: '你要找“韩国美女”吗？' }
-    //     ]);
-    // } else if (text == '微博') {
-    //     suggest([
-    //         { content: '新浪' + text, description: '新浪' + text },
-    //         { content: '腾讯' + text, description: '腾讯' + text },
-    //         { content: '搜狐' + text, description: '搜索' + text },
-    //     ]);
-    // } else {
-    //     suggest([
-    //         { content: '百度搜索 ' + text, description: '百度搜索 ' + text },
-    //         { content: '谷歌搜索 ' + text, description: '谷歌搜索 ' + text },
-    //     ]);
-    // }
 });
 
 // 当用户接收关键字建议时触发
@@ -150,6 +130,11 @@ chrome.storage.sync.get({ showImage: true }, function(items) {
 
 let movies = []
 
+let mediaRegs = [
+    /^http[s]?:\/\/mov.bn.netease.com\/open-movie\/nos\/flv\S*.flv$/,
+    /^http[s]?:\/\/mov.bn.netease.com\/movie\/\S*.flv$/
+]
+
 // web请求监听，最后一个参数表示阻塞式，需单独声明权限：webRequestBlocking
 chrome.webRequest.onBeforeRequest.addListener(details => {
     // cancel 表示取消本次请求
@@ -158,26 +143,34 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
     // 大部分网站视频的type并不是media，且视频做了防下载处理，所以这里仅仅是为了演示效果，无实际意义
 
     console.log(details.url)
-    if (/^http[s]?:\/\/mov.bn.netease.com\/open-movie\/nos\/flv\S*.flv$/.test(details.url)) {
-        movies.push(details.url)
-            // todo
-        chrome.contextMenus.create({
-            title: '下载当前页面视频',
-            contexts: ['all'],
-            onclick: function(params) {
-                // 注意不能使用location.href，因为location是属于background的window对象
-                chrome.tabs.update({ url: details.url });
-            }
-        });
-        chrome.contextMenus.create({
-            title: '显示当前页面视频URL',
-            contexts: ['all'],
-            onclick: function(params) {
-                // 注意不能使用location.href，因为location是属于background的window对象
-                alert(details.url);
-            }
-        });
+    for (let reg of mediaRegs) {
+        if (reg.test(details.url)) {
+            chrome.contextMenus.create({
+                title: '下载当前页面视频',
+                contexts: ['page'],
+                onclick: function(params) {
+                    // 注意不能使用location.href，因为location是属于background的window对象
+
+                    let elemIF = document.createElement("iframe");
+                    elemIF.src = details.url;
+                    elemIF.style.display = "none";
+                    document.body.appendChild(elemIF);
+
+                    // chrome.tabs.update({ url: details.url });
+                }
+            });
+            chrome.contextMenus.create({
+                title: '显示当前页面视频URL',
+                contexts: ['page'],
+                onclick: function(params) {
+                    // 注意不能使用location.href，因为location是属于background的window对象
+                    alert(details.url);
+                }
+            });
+            break
+        }
     }
+
 
     if (details.type == 'media') {
         chrome.notifications.create(null, {
