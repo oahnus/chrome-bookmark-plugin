@@ -128,9 +128,9 @@ chrome.storage.sync.get({ showImage: true }, function(items) {
     showImage = items.showImage;
 });
 
-let movies = []
+var movies = []
 
-let mediaRegs = [
+var mediaRegs = [
     /^http[s]?:\/\/mov.bn.netease.com\/open-movie\/nos\/flv\S*.flv$/,
     /^http[s]?:\/\/mov.bn.netease.com\/movie\/\S*.flv$/
 ]
@@ -143,7 +143,7 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
     // 大部分网站视频的type并不是media，且视频做了防下载处理，所以这里仅仅是为了演示效果，无实际意义
 
     console.log(details.url)
-    for (let reg of mediaRegs) {
+    for (var reg of mediaRegs) {
         if (reg.test(details.url)) {
             chrome.contextMenus.create({
                 title: '下载当前页面视频',
@@ -167,7 +167,7 @@ chrome.webRequest.onBeforeRequest.addListener(details => {
                     alert(details.url);
                 }
             });
-            break
+            break;
         }
     }
 
